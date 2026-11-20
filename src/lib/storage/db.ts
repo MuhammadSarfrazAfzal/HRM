@@ -902,3 +902,4 @@ export class LocalStorageDB {
 }
 
 export const getDB = () => LocalStorageDB.getInstance();
+
