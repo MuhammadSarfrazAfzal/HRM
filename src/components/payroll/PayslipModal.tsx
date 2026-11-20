@@ -222,3 +222,4 @@ export function PayslipModal({ result, periodName = "October 2026 Monthly Payrol
     </div>
   );
 }
+
