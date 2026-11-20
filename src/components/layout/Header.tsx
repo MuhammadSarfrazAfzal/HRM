@@ -65,3 +65,4 @@ export function Header({ currentRole, onRoleChange, onResetDB }: HeaderProps) {
     </header>
   );
 }
+
