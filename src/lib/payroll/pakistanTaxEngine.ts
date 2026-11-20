@@ -114,3 +114,4 @@ export function validateMinimumWageFloor(grossWage: number): { isCompliant: bool
   }
   return { isCompliant: false, deficit: STATUTORY_MINIMUM_WAGE_PKR - grossWage };
 }
+
