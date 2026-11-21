@@ -125,7 +125,7 @@ export default function CompliancePage() {
           </p>
           <button
             onClick={() => alert("FBR Sec 164 Certificate generated for all active employments (IRIS 2.0 compliant).")}
-            className="btn btn-secondary w-full justify-center"
+            className="btn btn-secondary h-auto min-h-9 w-full justify-center whitespace-normal py-2 text-center"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export IRIS Certificate Data</span>
@@ -142,7 +142,7 @@ export default function CompliancePage() {
           </p>
           <button
             onClick={() => alert("EOBI Payment Voucher generated for bank acknowledgment.")}
-            className="btn btn-secondary w-full justify-center"
+            className="btn btn-secondary h-auto min-h-9 w-full justify-center whitespace-normal py-2 text-center"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export EOBI Monthly Schedule</span>
@@ -159,7 +159,7 @@ export default function CompliancePage() {
           </p>
           <button
             onClick={() => alert("SESSI Monthly Form B schedule generated.")}
-            className="btn btn-secondary w-full justify-center"
+            className="btn btn-secondary h-auto min-h-9 w-full justify-center whitespace-normal py-2 text-center"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export SESSI Monthly Return</span>

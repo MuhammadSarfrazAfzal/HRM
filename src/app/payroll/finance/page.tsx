@@ -89,7 +89,7 @@ export default function FinanceDisbursementPage() {
             </div>
 
             {/* Batch Line Items Table */}
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
+            <div className="border border-slate-200 rounded-xl overflow-x-auto">
               <table className="data-table">
                 <thead>
                   <tr>
@@ -198,7 +198,7 @@ export default function FinanceDisbursementPage() {
             </div>
 
             {/* Journal Lines Table */}
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
+            <div className="border border-slate-200 rounded-xl overflow-x-auto">
               <table className="data-table">
                 <thead>
                   <tr>
