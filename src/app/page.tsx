@@ -32,7 +32,7 @@ export default function DashboardPage() {
   }, []);
 
   if (!mounted) {
-    return <div className="p-8 text-center text-slate-400">Loading FlowHCM Platform...</div>;
+    return <div className="empty-state">Loading FlowHCM Platform...</div>;
   }
 
   const employees = db.getEmployeesJoined();
@@ -43,315 +43,189 @@ export default function DashboardPage() {
   const payrollRuns = db.getPayrollRuns();
   const latestRun = payrollRuns[0];
 
+  const kpis = [
+    {
+      label: "Total Headcount",
+      icon: Users,
+      value: employees.length,
+      note: `(${activeEmployees.length} active)`,
+      noteClass: "text-emerald-700",
+      footer: "Karachi Corporate Site",
+    },
+    {
+      label: "Today's Punches",
+      icon: Clock,
+      value: attendanceDays.length,
+      note: "Logged",
+      noteClass: "text-emerald-700",
+      footer: "Shifts auto-paired with grace period",
+    },
+    {
+      label: "Leave On Hold",
+      icon: CalendarCheck,
+      value: pendingLeave.length,
+      note: "Requires Review",
+      noteClass: "text-amber-700",
+      footer: "Temporary ledger hold active",
+    },
+    {
+      label: "Latest Pay Run",
+      icon: Calculator,
+      value: latestRun?.state || "Draft",
+      note: `v${latestRun?.version || 1}`,
+      noteClass: "text-brand-700",
+      footer: latestRun?.period_name || "October 2026",
+    },
+  ];
+
+  const gates = [
+    { title: "1. Staff Record", body: <>Created Sam Rivera (E00412), assigned G-4 Grade & General Day Shift.</> },
+    { title: "2. Time & Cutoff", body: <>19/20 payable days (1 unpaid absence day), 4 approved overtime hours.</> },
+    {
+      title: "3. Deterministic Calc",
+      body: <>Exact match: 95k base + 8k OT = 103k gross − 9k deductions = <strong className="font-semibold text-slate-900">94,000.00 PKR net</strong>.</>,
+    },
+    { title: "4. Maker-Checker", body: <>Independent approver verification. Segregation of duties enforced.</> },
+    { title: "5. Bank & Payslip", body: <>1LINK payment batch with file hash, balanced GL posting, published ESS payslip.</> },
+  ];
+
+  const modules = [
+    { href: "/people", icon: Users, title: "Employee Records", desc: "Central profiles, effective-dated jobs, documents" },
+    { href: "/people/onboarding", icon: ShieldCheck, title: "Onboarding Lifecycle", desc: "Task checklists, due dates & payroll readiness gates" },
+    { href: "/workforce", icon: Clock, title: "Time & Attendance", desc: "Biometric devices, overnight shifts & exceptions" },
+    { href: "/workforce/leave", icon: CalendarCheck, title: "Leave Balance Ledger", desc: "Accruals, reservation holds, team calendars" },
+    { href: "/payroll", icon: Calculator, title: "Payroll Workbench (5-Stage)", desc: "Inputs snapshot hash, formula trace, signoffs" },
+    { href: "/payroll/compliance", icon: Building, title: "Pakistan Statutory & Taxes", desc: "FBR Sec 149 TY2027, EOBI, SESSI & minimum wage" },
+    { href: "/payroll/finance", icon: Database, title: "Disbursement & GL Journals", desc: "Bank 1LINK files, failure retry & balanced posting" },
+    { href: "/people/separation", icon: FileText, title: "Separation & Settlement (F&F)", desc: "Sindh Standing Order 16, clearances, gratuity/PF" },
+    { href: "/self-service", icon: CheckCircle2, title: "Employee Self-Service (ESS)", desc: "Mobile web punch with GPS geofence, payslips" },
+  ];
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="page space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial from-brand-500/10 to-transparent pointer-events-none" />
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 border border-brand-400/30 text-xs font-semibold text-brand-300">
-            <ShieldCheck className="w-4 h-4 text-brand-400" />
+      <section className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900 px-6 py-8 text-white shadow-card sm:px-8">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(58,104,246,0.35),transparent_55%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:32px_32px] [mask-image:linear-gradient(to_left,black,transparent_70%)]"
+        />
+        <div className="relative z-10 max-w-3xl space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-slate-200">
+            <ShieldCheck className="h-3.5 w-3.5 text-brand-300" />
             <span>FlowHCM Capability Benchmark Specification v1.0</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Enterprise HRM & Deterministic Payroll Platform
           </h1>
-          <p className="text-slate-300 text-sm leading-relaxed">
-            Engineered for <span className="text-white font-semibold">Star Solutions Pakistan (Pvt) Ltd</span>. Built around verified employee lifecycle management, biometric time reconciliation, immutable input snapshots, and balanced finance reconciliation.
+          <p className="max-w-2xl text-sm leading-relaxed text-slate-300">
+            Engineered for <span className="font-medium text-white">Star Solutions Pakistan (Pvt) Ltd</span>. Built around verified employee lifecycle management, biometric time reconciliation, immutable input snapshots, and balanced finance reconciliation.
           </p>
-          <div className="pt-2 flex flex-wrap gap-3">
-            <Link
-              href="/payroll"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs shadow-lg shadow-brand-500/25 transition"
-            >
-              <Calculator className="w-4 h-4" />
+          <div className="flex flex-wrap gap-3 pt-2">
+            <Link href="/payroll" className="btn bg-white text-slate-900 shadow-xs hover:bg-slate-100">
+              <Calculator />
               <span>Open Payroll Workbench</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight />
             </Link>
-            <Link
-              href="/people"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition"
-            >
-              <Users className="w-4 h-4" />
+            <Link href="/people" className="btn border border-white/15 bg-white/5 text-white hover:bg-white/10">
+              <Users />
               <span>Manage People Directory</span>
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Active Staff */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Total Headcount</span>
-            <div className="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center">
-              <Users className="w-4 h-4" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {kpis.map((kpi) => {
+          const Icon = kpi.icon;
+          return (
+            <div key={kpi.label} className="card p-5">
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-medium text-slate-500">{kpi.label}</span>
+                <span className="icon-tile-sm">
+                  <Icon />
+                </span>
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-2xl font-semibold tracking-tight tabular-nums text-slate-900">{kpi.value}</span>
+                <span className={`text-xs font-medium ${kpi.noteClass}`}>{kpi.note}</span>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">{kpi.footer}</p>
             </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900">{employees.length}</span>
-            <span className="text-xs font-semibold text-emerald-600">({activeEmployees.length} active)</span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1">Karachi Corporate Site</p>
-        </div>
-
-        {/* Time & Attendance */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Today's Punches</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <Clock className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900">{attendanceDays.length}</span>
-            <span className="text-xs font-semibold text-emerald-600">Logged</span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1">Shifts auto-paired with grace period</p>
-        </div>
-
-        {/* Pending Leave Requests */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Leave On Hold</span>
-            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-              <CalendarCheck className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-900">{pendingLeave.length}</span>
-            <span className="text-xs font-semibold text-amber-600">Requires Review</span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1">Temporary ledger hold active</p>
-        </div>
-
-        {/* Current Payroll Run Status */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Latest Pay Run</span>
-            <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-              <Calculator className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl font-black text-slate-900">{latestRun?.state || "Draft"}</span>
-            <span className="text-xs font-semibold text-purple-600">v{latestRun?.version || 1}</span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-1">{latestRun?.period_name || "October 2026"}</p>
-        </div>
+          );
+        })}
       </div>
 
       {/* First Build Milestone Verification Section */}
-      <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+      <section className="card">
+        <div className="card-header">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-              ✓
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-100">
+              <CheckCircle2 className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900">First Build Milestone: P0 Benchmark Complete</h2>
-              <p className="text-xs text-slate-500">
-                End-to-end controlled verification using synthetic fixture employee <strong>Sam Rivera (E00412)</strong>
+              <h2 className="card-title">First Build Milestone: P0 Benchmark Complete</h2>
+              <p className="card-subtitle">
+                End-to-end controlled verification using synthetic fixture employee <strong className="font-medium text-slate-700">Sam Rivera (E00412)</strong>
               </p>
             </div>
           </div>
-          <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span className="badge badge-success">
+            <CheckCircle2 />
             All 5 Gates Verified
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 pt-1">
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 1. Staff Record
-            </div>
-            <p className="text-slate-500 text-[11px]">Created Sam Rivera (E00412), assigned G-4 Grade & General Day Shift.</p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 2. Time & Cutoff
-            </div>
-            <p className="text-slate-500 text-[11px]">19/20 payable days (1 unpaid absence day), 4 approved overtime hours.</p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 3. Deterministic Calc
-            </div>
-            <p className="text-slate-500 text-[11px]">Exact match: 95k base + 8k OT = 103k gross − 9k deductions = <strong>94,000.00 PKR net</strong>.</p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 4. Maker-Checker
-            </div>
-            <p className="text-slate-500 text-[11px]">Independent approver verification. Segregation of duties enforced.</p>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
-            <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 5. Bank & Payslip
-            </div>
-            <p className="text-slate-500 text-[11px]">1LINK payment batch with file hash, balanced GL posting, published ESS payslip.</p>
-          </div>
-        </div>
-      </div>
+        <ol className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2 lg:grid-cols-5">
+          {gates.map((gate) => (
+            <li key={gate.title} className="stat-tile p-4">
+              <div className="flex items-center gap-1.5 text-[13px] font-semibold text-slate-900">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" /> {gate.title}
+              </div>
+              <p className="mt-1.5 text-xs leading-relaxed text-slate-500">{gate.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       {/* FlowHCM 18-Module Capability Grid */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+      <section className="space-y-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">FlowHCM Capability Modules</h2>
-            <p className="text-xs text-slate-500">Full 18-module benchmark coverage implemented across system routes</p>
+            <h2 className="text-lg font-semibold text-slate-900">FlowHCM Capability Modules</h2>
+            <p className="mt-0.5 text-sm text-slate-500">Full 18-module benchmark coverage implemented across system routes</p>
           </div>
           <Link
             href="/settings"
-            className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1"
+            className="inline-flex items-center gap-1 text-[13px] font-medium text-brand-600 hover:text-brand-700"
           >
             <span>Supabase Sync & DB Settings</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Link
-            href="/people"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <Users className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Employee Records</h3>
-                <p className="text-xs text-slate-500">Central profiles, effective-dated jobs, documents</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/people/onboarding"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Onboarding Lifecycle</h3>
-                <p className="text-xs text-slate-500">Task checklists, due dates & payroll readiness gates</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/workforce"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <Clock className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Time & Attendance</h3>
-                <p className="text-xs text-slate-500">Biometric devices, overnight shifts & exceptions</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/workforce/leave"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <CalendarCheck className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Leave Balance Ledger</h3>
-                <p className="text-xs text-slate-500">Accruals, reservation holds, team calendars</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/payroll"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <Calculator className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Payroll Workbench (5-Stage)</h3>
-                <p className="text-xs text-slate-500">Inputs snapshot hash, formula trace, signoffs</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/payroll/compliance"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <Building className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Pakistan Statutory & Taxes</h3>
-                <p className="text-xs text-slate-500">FBR Sec 149 TY2027, EOBI, SESSI & minimum wage</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/payroll/finance"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <Database className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Disbursement & GL Journals</h3>
-                <p className="text-xs text-slate-500">Bank 1LINK files, failure retry & balanced posting</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/people/separation"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <FileText className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Separation & Settlement (F&F)</h3>
-                <p className="text-xs text-slate-500">Sindh Standing Order 16, clearances, gratuity/PF</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/self-service"
-            className="p-4 rounded-xl bg-white border border-slate-200 hover:border-brand-500 hover:shadow-md transition group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Employee Self-Service (ESS)</h3>
-                <p className="text-xs text-slate-500">Mobile web punch with GPS geofence, payslips</p>
-              </div>
-            </div>
-          </Link>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {modules.map((mod) => {
+            const Icon = mod.icon;
+            return (
+              <Link key={mod.href} href={mod.href} className="card card-interactive group flex items-center gap-3.5 p-4">
+                <div className="icon-tile transition-colors group-hover:bg-brand-600 group-hover:text-white group-hover:ring-brand-600">
+                  <Icon />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-semibold text-slate-900">{mod.title}</h3>
+                  <p className="mt-0.5 text-[13px] text-slate-500">{mod.desc}</p>
+                </div>
+                <ArrowRight className="h-4 w-4 shrink-0 text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-brand-600" />
+              </Link>
+            );
+          })}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

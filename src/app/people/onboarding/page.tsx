@@ -24,10 +24,10 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="page">
       <div>
-        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Onboarding Lifecycle & Checklists</h1>
-        <p className="text-xs text-slate-500">
+        <h1 className="page-title">Onboarding Lifecycle & Checklists</h1>
+        <p className="page-subtitle">
           FlowHCM Benchmark • Draft &rarr; Ready &rarr; Active transition with mandatory payroll readiness verification
         </p>
       </div>
@@ -38,16 +38,16 @@ export default function OnboardingPage() {
           const totalDone = c.tasks.filter((t) => t.completed).length;
 
           return (
-            <div key={c.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+            <div key={c.id} className="card p-5 sm:p-6 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold">
+                  <div className="icon-tile">
                     <UserPlus className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-base font-bold text-slate-900">{c.candidate_name}</h2>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                      <h2 className="text-base font-semibold text-slate-900">{c.candidate_name}</h2>
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full uppercase ${
                         c.status === "Active" ? "bg-emerald-100 text-emerald-800" : (c.status === "Ready" ? "bg-blue-100 text-blue-800" : "bg-amber-100 text-amber-800")
                       }`}>
                         {c.status}
@@ -59,10 +59,10 @@ export default function OnboardingPage() {
 
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <span className="text-xs font-bold text-slate-800">
+                    <span className="text-xs font-semibold text-slate-800">
                       {totalDone} of {c.tasks.length} Completed
                     </span>
-                    <div className="text-[10px] text-slate-400">
+                    <div className="text-[11px] text-slate-400">
                       {mandatoryDone ? "✓ Ready for Payroll" : "⚠ Missing Payroll Mandatory Tasks"}
                     </div>
                   </div>
@@ -77,7 +77,7 @@ export default function OnboardingPage() {
 
               {/* Task Items */}
               <div className="space-y-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <span className="section-title">
                   Assigned Checklist Tasks
                 </span>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
@@ -95,19 +95,19 @@ export default function OnboardingPage() {
                         type="checkbox"
                         checked={task.completed}
                         onChange={() => {}} // handled by div
-                        className="mt-0.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                        className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-brand-600"
                       />
                       <div className="space-y-0.5">
                         <span className={`font-semibold block ${task.completed ? "line-through text-slate-400" : "text-slate-900"}`}>
                           {task.title}
                         </span>
-                        <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                        <div className="flex items-center gap-2 text-[11px] text-slate-400">
                           <span className="px-1.5 py-0.2 rounded bg-white border border-slate-200 text-slate-600 font-medium">
                             {task.category}
                           </span>
                           <span>Due: {task.due_date}</span>
                           {task.mandatory_for_payroll && (
-                            <span className="text-rose-600 font-bold">• Payroll Mandatory</span>
+                            <span className="text-rose-600 font-semibold">• Payroll Mandatory</span>
                           )}
                         </div>
                       </div>

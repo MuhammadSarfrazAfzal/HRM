@@ -27,37 +27,37 @@ export default function ManagerPortalPage() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="page">
       <div>
-        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Manager Team Inbox & Approvals</h1>
-        <p className="text-xs text-slate-500">
+        <h1 className="page-title">Manager Team Inbox & Approvals</h1>
+        <p className="page-subtitle">
           FlowHCM Benchmark • Team inbox, shift coverage validation (e.g. 7 of 9 present), and anti-self-approval enforcement
         </p>
       </div>
 
       {/* Coverage Indicator Card */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold">
+          <div className="icon-tile">
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Operations Team Roster Coverage</h2>
+            <h2 className="card-title">Operations Team Roster Coverage</h2>
             <p className="text-xs text-slate-500">Retail North & Operations Shift Coverage: <strong>7 of 9 staff active</strong></p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-3 py-1 rounded-full">
+          <span className="badge badge-success">
             Coverage Safe (78%)
           </span>
         </div>
       </div>
 
       {/* Approval Requests Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900">Pending Team Requests Awaiting Action</h2>
-          <span className="text-xs font-mono text-slate-500 font-bold">{requests.length} Requests</span>
+      <div className="card overflow-hidden">
+        <div className="card-header">
+          <h2 className="card-title">Pending Team Requests Awaiting Action</h2>
+          <span className="card-meta">{requests.length} Requests</span>
         </div>
 
         {requests.length === 0 ? (
@@ -72,8 +72,8 @@ export default function ManagerPortalPage() {
                 <div key={req.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50 transition">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 text-sm">{emp?.fullName || req.employment_id}</span>
-                      <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-brand-50 text-brand-700 font-bold">
+                      <span className="font-semibold text-slate-900 text-sm">{emp?.fullName || req.employment_id}</span>
+                      <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-brand-50 text-brand-700 font-semibold">
                         {req.policy_code} Leave
                       </span>
                     </div>
@@ -88,13 +88,13 @@ export default function ManagerPortalPage() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleDecision(req.id, "Approved")}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm transition"
+                      className="btn btn-success btn-xs"
                     >
                       Approve Request
                     </button>
                     <button
                       onClick={() => handleDecision(req.id, "Rejected")}
-                      className="px-3 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition"
+                      className="btn btn-secondary btn-xs"
                     >
                       Reject
                     </button>

@@ -20,10 +20,10 @@ export default function RecruitmentATSPage() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="page">
       <div>
-        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Recruitment & Applicant Tracking (ATS)</h1>
-        <p className="text-xs text-slate-500">
+        <h1 className="page-title">Recruitment & Applicant Tracking (ATS)</h1>
+        <p className="page-subtitle">
           FlowHCM Benchmark • Headcount requisitions, interview feedback, and 1-click offer to Onboarding conversion
         </p>
       </div>
@@ -31,15 +31,15 @@ export default function RecruitmentATSPage() {
       {/* Requisitions Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {requisitions.map((req) => (
-          <div key={req.id} className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 text-xs">
+          <div key={req.id} className="card p-5 space-y-2 text-xs">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-slate-900 text-sm">{req.title}</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+              <span className="font-semibold text-slate-900 text-sm">{req.title}</span>
+              <span className="badge badge-success">
                 {req.status}
               </span>
             </div>
             <p className="text-slate-500">{req.department} • Open Positions: {req.positions_count}</p>
-            <div className="text-[11px] text-slate-600 font-mono">
+            <div className="text-[11px] text-slate-600 tabular-nums">
               Budget: {formatCurrency(req.budget_min)} – {formatCurrency(req.budget_max)}
             </div>
           </div>
@@ -47,14 +47,14 @@ export default function RecruitmentATSPage() {
       </div>
 
       {/* Candidates Pipeline Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900">Candidate Pipeline</h2>
-          <span className="text-xs text-slate-500 font-mono">Active applicants: {candidates.length}</span>
+      <div className="card overflow-hidden">
+        <div className="card-header">
+          <h2 className="card-title">Candidate Pipeline</h2>
+          <span className="card-meta">Active applicants: {candidates.length}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200 text-[10px]">
+          <table className="data-table">
+            <thead>
               <tr>
                 <th className="px-5 py-3">Candidate Name</th>
                 <th className="px-5 py-3">Applied Position</th>
@@ -63,27 +63,27 @@ export default function RecruitmentATSPage() {
                 <th className="px-5 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody>
               {candidates.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50/70 transition">
+                <tr key={c.id}>
                   <td className="px-5 py-3.5">
-                    <span className="font-bold text-slate-900">{c.name}</span>
+                    <span className="font-semibold text-slate-900">{c.name}</span>
                     <div className="text-[11px] text-slate-400">{c.email}</div>
                   </td>
                   <td className="px-5 py-3.5 font-semibold text-slate-800">{c.role}</td>
                   <td className="px-5 py-3.5">
-                    <span className="px-2.5 py-0.5 rounded-full font-bold text-[10px] bg-brand-50 text-brand-700 border border-brand-200">
+                    <span className="badge badge-info">
                       {c.stage}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 font-mono">
+                  <td className="px-5 py-3.5 tabular-nums">
                     {c.offeredSalary ? formatCurrency(c.offeredSalary) : c.rating}
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     {c.stage === "Offer" && (
                       <button
                         onClick={() => handleConvertToOnboarding(c)}
-                        className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition"
+                        className="btn btn-success btn-xs"
                       >
                         Convert to Onboarding
                       </button>

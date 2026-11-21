@@ -11,22 +11,22 @@ export default function ExpensesTravelPage() {
   ]);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="page">
       <div>
-        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Expense & Travel Claims</h1>
-        <p className="text-xs text-slate-500">
+        <h1 className="page-title">Expense & Travel Claims</h1>
+        <p className="page-subtitle">
           FlowHCM Benchmark • Policy spend limits, receipt capture, travel authorizations, and routing to Accounts Payable or Payroll
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900">Submitted Employee Claims</h2>
-          <span className="text-xs font-mono text-slate-500 font-bold">{claims.length} Claims</span>
+      <div className="card overflow-hidden">
+        <div className="card-header">
+          <h2 className="card-title">Submitted Employee Claims</h2>
+          <span className="card-meta">{claims.length} Claims</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200 text-[10px]">
+          <table className="data-table">
+            <thead>
               <tr>
                 <th className="px-5 py-3">Claim ID</th>
                 <th className="px-5 py-3">Employee</th>
@@ -36,18 +36,18 @@ export default function ExpensesTravelPage() {
                 <th className="px-5 py-3 text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody>
               {claims.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50/70 transition">
-                  <td className="px-5 py-3.5 font-mono font-bold text-slate-900">{c.id}</td>
-                  <td className="px-5 py-3.5 font-bold text-slate-900">{c.employee}</td>
+                <tr key={c.id}>
+                  <td className="px-5 py-3.5 font-mono font-semibold text-slate-900">{c.id}</td>
+                  <td className="px-5 py-3.5 font-semibold text-slate-900">{c.employee}</td>
                   <td className="px-5 py-3.5 font-medium">{c.category}</td>
                   <td className="px-5 py-3.5 text-slate-600 font-medium">{c.channel}</td>
-                  <td className="px-5 py-3.5 text-right font-mono font-bold text-slate-900">
+                  <td className="px-5 py-3.5 text-right tabular-nums font-semibold text-slate-900">
                     {formatCurrency(c.amount)}
                   </td>
                   <td className="px-5 py-3.5 text-center">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                    <span className="badge badge-success">
                       {c.status}
                     </span>
                   </td>
