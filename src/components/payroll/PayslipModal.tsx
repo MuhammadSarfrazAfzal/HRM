@@ -32,7 +32,7 @@ export function PayslipModal({ result, periodName = "October 2026 Monthly Payrol
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-3 py-6 backdrop-blur-[2px] sm:p-6 sm:py-10"
+      className="fixed inset-0 z-50 !mt-0 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-3 py-6 backdrop-blur-[2px] sm:p-6 sm:py-10"
       aria-modal="true"
       role="dialog"
     >

@@ -15,7 +15,7 @@ export function CalculationTraceDrawer({ result, onClose, onOpenPayslip }: Calcu
   if (!result) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end overflow-hidden bg-slate-900/50 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 !mt-0 flex justify-end overflow-hidden bg-slate-900/50 backdrop-blur-[2px]">
       <div className="flex h-full w-full max-w-xl flex-col bg-white shadow-overlay animate-slide-in-right">
         {/* Drawer Header */}
         <div className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4 sm:px-6">

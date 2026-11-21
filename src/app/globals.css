@@ -233,8 +233,9 @@
   }
 
   /* ---------- Modals & drawers ---------- */
+  /* !mt-0: overlays render inside .page, whose space-y-6 would push them 24px down */
   .modal-backdrop {
-    @apply fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-4 backdrop-blur-[2px];
+    @apply fixed inset-0 z-50 !mt-0 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-4 backdrop-blur-[2px];
   }
   .modal-panel {
     @apply my-8 w-full overflow-hidden rounded-xl bg-white shadow-overlay ring-1 ring-slate-900/5 animate-fade-in sm:my-auto;

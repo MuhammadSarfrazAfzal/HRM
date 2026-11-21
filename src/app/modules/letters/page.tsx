@@ -22,14 +22,14 @@ export default function HrLettersPage() {
         </p>
       </div>
 
-      <div className="card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
+      <div className="card p-4 flex flex-col sm:flex-row sm:flex-wrap sm:items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
           <div>
             <label className="stat-label mb-0.5">Select Employee</label>
             <select
               value={selectedEmpId}
               onChange={(e) => setSelectedEmpId(e.target.value)}
-              className="select input-sm w-auto font-medium"
+              className="select input-sm w-full sm:w-auto font-medium"
             >
               {employees.map((e) => (
                 <option key={e.id} value={e.id}>{e.worker_code} - {e.fullName}</option>
@@ -42,7 +42,7 @@ export default function HrLettersPage() {
             <select
               value={letterType}
               onChange={(e) => setLetterType(e.target.value)}
-              className="select input-sm w-auto font-medium"
+              className="select input-sm w-full sm:w-auto font-medium"
             >
               <option value="Salary Certificate">Salary Certificate</option>
               <option value="Employment Verification">Employment Verification Letter</option>

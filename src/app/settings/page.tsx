@@ -127,7 +127,7 @@ export default function SettingsPage() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={handleExportDB}
-            className="btn btn-secondary"
+            className="btn btn-secondary h-auto min-h-9 whitespace-normal py-2 text-center"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export Full JSON Database Backup</span>
