@@ -222,7 +222,7 @@ export default function PayrollWorkbenchPage() {
                 {activeRun.state === "Pending_Approval" && (
                   <button
                     onClick={handleApprove}
-                    className="btn btn-success"
+                    className="btn btn-success h-auto min-h-9 whitespace-normal py-2 text-center lg:whitespace-nowrap"
                   >
                     <CheckCircle2 />
                     <span>4. Approve Revision (Checker Sign-off)</span>
@@ -230,7 +230,7 @@ export default function PayrollWorkbenchPage() {
                 )}
 
                 {activeRun.state === "Approved" && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap">
                     <Link
                       href="/payroll/finance"
                       className="btn btn-secondary"

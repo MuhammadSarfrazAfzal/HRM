@@ -71,7 +71,7 @@ export default function FinanceDisbursementPage() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4 sm:flex-nowrap">
                 <div className="text-right">
                   <span className="stat-label">Batch Control Total</span>
                   <span className="text-lg font-semibold text-slate-900 tabular-nums">
