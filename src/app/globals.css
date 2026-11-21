@@ -78,9 +78,6 @@
   .card-subtitle {
     @apply mt-0.5 text-[13px] text-slate-500;
   }
-  .card-body {
-    @apply p-5;
-  }
   .card-meta {
     @apply text-xs font-medium tabular-nums text-slate-500;
   }
@@ -172,12 +169,6 @@
   .badge-info {
     @apply bg-brand-50 text-brand-700 ring-brand-600/20;
   }
-  .badge-violet {
-    @apply bg-violet-50 text-violet-700 ring-violet-600/20;
-  }
-  .badge-neutral {
-    @apply bg-slate-100 text-slate-700 ring-slate-500/20;
-  }
   .badge-dot {
     @apply h-1.5 w-1.5 rounded-full bg-current;
   }
@@ -186,9 +177,6 @@
   }
 
   /* ---------- Tables ---------- */
-  .table-wrap {
-    @apply overflow-x-auto;
-  }
   .data-table {
     @apply w-full text-left text-[13px];
   }
@@ -233,26 +221,6 @@
     @apply h-4 w-4;
   }
 
-  /* ---------- Callouts ---------- */
-  .callout {
-    @apply flex items-start gap-2.5 rounded-lg border px-4 py-3 text-[13px] leading-relaxed;
-  }
-  .callout > svg {
-    @apply mt-0.5 h-4 w-4 shrink-0;
-  }
-  .callout-info {
-    @apply border-brand-200 bg-brand-50/70 text-brand-900;
-  }
-  .callout-success {
-    @apply border-emerald-200 bg-emerald-50/70 text-emerald-900;
-  }
-  .callout-warning {
-    @apply border-amber-200 bg-amber-50/70 text-amber-900;
-  }
-  .callout-danger {
-    @apply border-rose-200 bg-rose-50/70 text-rose-900;
-  }
-
   /* ---------- Tabs ---------- */
   .tabs {
     @apply inline-flex max-w-full gap-1 overflow-x-auto rounded-lg bg-slate-100 p-1;
@@ -293,14 +261,6 @@
   /* ---------- Empty states ---------- */
   .empty-state {
     @apply flex flex-col items-center justify-center gap-2 px-6 py-12 text-center text-sm text-slate-500;
-  }
-
-  /* ---------- Legacy animation hooks used by drawers/modals ---------- */
-  .animate-in {
-    animation: fade-in 200ms ease-out backwards;
-  }
-  .animate-in.slide-in-from-right {
-    animation: slide-in-right 220ms cubic-bezier(0.32, 0.72, 0, 1) both;
   }
 }
 

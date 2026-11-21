@@ -38,7 +38,7 @@ export function PayslipModal({ result, periodName = "October 2026 Monthly Payrol
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative my-auto w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-overlay ring-1 ring-slate-900/5 animate-in sm:my-4"
+        className="relative my-auto w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-overlay ring-1 ring-slate-900/5 animate-fade-in sm:my-4"
       >
         {/* Sticky Modal Top Controls Bar (Hidden in Print) */}
         <div className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-slate-200 bg-white/95 px-5 py-3 backdrop-blur no-print">
