@@ -234,10 +234,10 @@
 
   /* ---------- Modals & drawers ---------- */
   .modal-backdrop {
-    @apply fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-4 backdrop-blur-[2px] sm:items-center;
+    @apply fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-4 backdrop-blur-[2px];
   }
   .modal-panel {
-    @apply my-8 w-full overflow-hidden rounded-xl bg-white shadow-overlay ring-1 ring-slate-900/5 animate-fade-in;
+    @apply my-8 w-full overflow-hidden rounded-xl bg-white shadow-overlay ring-1 ring-slate-900/5 animate-fade-in sm:my-auto;
   }
   .modal-header {
     @apply flex items-center justify-between gap-4 border-b border-slate-200 px-6 py-4;
