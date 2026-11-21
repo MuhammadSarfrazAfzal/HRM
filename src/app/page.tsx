@@ -150,8 +150,8 @@ export default function DashboardPage() {
                   <Icon />
                 </span>
               </div>
-              <div className="mt-3 flex items-baseline gap-2">
-                <span className="text-2xl font-semibold tracking-tight tabular-nums text-slate-900">{kpi.value}</span>
+              <div className="mt-3 flex flex-wrap items-baseline gap-x-2">
+                <span className="min-w-0 break-words text-2xl font-semibold tracking-tight tabular-nums text-slate-900">{kpi.value}</span>
                 <span className={`text-xs font-medium ${kpi.noteClass}`}>{kpi.note}</span>
               </div>
               <p className="mt-1 text-xs text-slate-500">{kpi.footer}</p>
