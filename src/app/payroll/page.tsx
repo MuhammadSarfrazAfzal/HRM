@@ -17,8 +17,7 @@ import {
   Plus,
   Hash,
   Download,
-  AlertOctagon,
-} from "lucide-react";
+  AlertOctagon, X } from "lucide-react";
 import { getDB } from "@/lib/storage/db";
 import { PayrollRun, EmployeeResult } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -121,45 +120,43 @@ export default function PayrollWorkbenchPage() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="page">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="page-header">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Payroll Workbench & Register</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="page-title">Payroll Workbench & Register</h1>
+          <p className="page-subtitle">
             5-Stage Guarded Pipeline • Immutable Snapshots, Line Traces, Maker-Checker Sign-off, and Bank Reconciliation
           </p>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="page-actions">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition"
+            className="btn btn-dark"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus />
             <span>New Payroll Run</span>
           </button>
         </div>
       </div>
 
       {/* Pay Runs Selector Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+      <div className="tabs" role="tablist" aria-label="Payroll runs">
         {runs.map((r) => (
           <button
             key={r.id}
+            role="tab"
+            aria-selected={r.id === activeRun?.id}
             onClick={() => handleRunSelect(r.id)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 border flex-shrink-0 ${
-              r.id === activeRun?.id
-                ? "bg-brand-600 text-white border-brand-600 shadow-md shadow-brand-600/20"
-                : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-            }`}
+            className={`tab ${r.id === activeRun?.id ? "tab-active" : ""}`}
           >
-            <Calculator className="w-3.5 h-3.5" />
+            <Calculator className={`h-3.5 w-3.5 ${r.id === activeRun?.id ? "text-brand-600" : "text-slate-400"}`} />
             <span>{r.period_name}</span>
             <span
-              className={`text-[10px] px-1.5 py-0.2 rounded uppercase ${
+              className={`rounded px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${
                 r.id === activeRun?.id
-                  ? "bg-white/20 text-white"
-                  : "bg-slate-100 text-slate-600"
+                  ? "bg-brand-50 text-brand-700"
+                  : "bg-slate-200/70 text-slate-600"
               }`}
             >
               {r.state}
@@ -171,22 +168,22 @@ export default function PayrollWorkbenchPage() {
       {activeRun && (
         <>
           {/* Active Run Banner & 5-Stage Gate Progress */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2.5">
-                  <h2 className="text-lg font-bold text-slate-900">{activeRun.period_name}</h2>
-                  <span className="font-mono text-xs px-2 py-0.5 rounded bg-brand-50 text-brand-700 font-bold border border-brand-200">
+          <div className="card space-y-6 p-5 sm:p-6">
+            <div className="flex flex-col justify-between gap-4 border-b border-slate-100 pb-5 lg:flex-row lg:items-center">
+              <div className="min-w-0 space-y-1">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <h2 className="text-lg font-semibold text-slate-900">{activeRun.period_name}</h2>
+                  <span className="badge badge-info">
                     Entity 01 • PKR • Version {activeRun.version}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-[13px] text-slate-500">
                   Cutoff: 25th of month • Payout Date: 30th of month • Headcount: {activeRun.employee_count} employees
                 </p>
                 {activeRun.snapshot_hash && (
-                  <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-500 pt-1">
-                    <Hash className="w-3.5 h-3.5 text-brand-500" />
-                    <span>Snapshot Hash: {activeRun.snapshot_hash}</span>
+                  <div className="flex min-w-0 items-center gap-1.5 pt-1 font-mono text-xs text-slate-500">
+                    <Hash className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                    <span className="truncate">Snapshot Hash: {activeRun.snapshot_hash}</span>
                   </div>
                 )}
               </div>
@@ -196,9 +193,9 @@ export default function PayrollWorkbenchPage() {
                 {activeRun.state === "Draft" && (
                   <button
                     onClick={handleLockInputs}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition"
+                    className="btn btn-dark"
                   >
-                    <Lock className="w-3.5 h-3.5 text-amber-400" />
+                    <Lock className="text-amber-300" />
                     <span>1. Lock Inputs Snapshot</span>
                   </button>
                 )}
@@ -206,9 +203,9 @@ export default function PayrollWorkbenchPage() {
                 {(activeRun.state === "Inputs_Locked" || activeRun.state === "Review") && (
                   <button
                     onClick={handleCalculate}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-sm shadow-brand-500/20 transition"
+                    className="btn btn-primary"
                   >
-                    <Play className="w-3.5 h-3.5" />
+                    <Play />
                     <span>2. Run Deterministic Calculation</span>
                   </button>
                 )}
@@ -216,7 +213,7 @@ export default function PayrollWorkbenchPage() {
                 {activeRun.state === "Review" && (
                   <button
                     onClick={handleSubmitApproval}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-sm transition"
+                    className="btn btn-primary"
                   >
                     <span>3. Submit for Checker Approval</span>
                   </button>
@@ -225,25 +222,25 @@ export default function PayrollWorkbenchPage() {
                 {activeRun.state === "Pending_Approval" && (
                   <button
                     onClick={handleApprove}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm transition"
+                    className="btn btn-success h-auto min-h-9 whitespace-normal py-2 text-center lg:whitespace-nowrap"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <CheckCircle2 />
                     <span>4. Approve Revision (Checker Sign-off)</span>
                   </button>
                 )}
 
                 {activeRun.state === "Approved" && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 lg:flex-nowrap">
                     <Link
                       href="/payroll/finance"
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition"
+                      className="btn btn-secondary"
                     >
-                      <CreditCard className="w-3.5 h-3.5" />
+                      <CreditCard />
                       <span>Bank Batch & GL</span>
                     </Link>
                     <button
                       onClick={handleCloseRun}
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition"
+                      className="btn btn-dark"
                     >
                       <span>5. Reconcile & Close</span>
                     </button>
@@ -251,15 +248,15 @@ export default function PayrollWorkbenchPage() {
                 )}
 
                 {activeRun.state === "Closed" && (
-                  <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Fully Settled & Closed
+                  <span className="badge badge-success px-3 py-1.5 text-[13px]">
+                    <CheckCircle2 className="!h-4 !w-4" /> Fully Settled & Closed
                   </span>
                 )}
               </div>
             </div>
 
             {/* 5-Stage Stepper Visualization */}
-            <div className="grid grid-cols-5 gap-2 text-center text-xs">
+            <ol className="grid grid-cols-1 gap-2 sm:grid-cols-5">
               {[
                 { stage: "Draft", label: "PAY-01 Draft", desc: "Parameter & Cutoff Check" },
                 { stage: "Inputs_Locked", label: "PAY-02 Inputs Locked", desc: "Materialized Hash" },
@@ -275,61 +272,75 @@ export default function PayrollWorkbenchPage() {
                   (step.stage === "Approved" && activeRun.state === "Closed");
 
                 return (
-                  <div
+                  <li
                     key={idx}
-                    className={`p-2.5 rounded-xl border transition ${
+                    aria-current={isCurrent ? "step" : undefined}
+                    className={`flex items-center gap-3 rounded-lg border p-3 transition sm:flex-col sm:items-start sm:gap-2 ${
                       isCurrent
-                        ? "bg-brand-50 border-brand-300 text-brand-900 font-bold"
+                        ? "border-brand-300 bg-brand-50/70 ring-1 ring-brand-200"
                         : isCompleted
-                        ? "bg-slate-50 border-slate-200 text-slate-800"
-                        : "bg-white border-slate-100 text-slate-400"
+                        ? "border-slate-200 bg-white"
+                        : "border-dashed border-slate-200 bg-slate-50/50"
                     }`}
                   >
-                    <span className="text-[10px] block uppercase font-mono tracking-wider">{step.label}</span>
-                    <span className="text-[11px] block mt-0.5">{step.desc}</span>
-                  </div>
+                    <span
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                        isCurrent
+                          ? "bg-brand-600 text-white"
+                          : isCompleted
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-slate-200 text-slate-500"
+                      }`}
+                    >
+                      {isCompleted ? <CheckCircle2 className="h-3.5 w-3.5" /> : idx + 1}
+                    </span>
+                    <span className="min-w-0">
+                      <span className={`block text-[11px] font-semibold uppercase tracking-wide ${isCurrent ? "text-brand-700" : isCompleted ? "text-slate-700" : "text-slate-400"}`}>{step.label}</span>
+                      <span className={`mt-0.5 block text-xs ${isCurrent ? "text-brand-900" : isCompleted ? "text-slate-500" : "text-slate-400"}`}>{step.desc}</span>
+                    </span>
+                  </li>
                 );
               })}
-            </div>
+            </ol>
 
             {/* Run Totals Summary */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Total Gross</span>
-                <span className="text-base font-bold text-slate-900 font-mono mt-0.5 block">{formatCurrency(activeRun.total_gross)}</span>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="stat-tile">
+                <span className="stat-label">Total Gross</span>
+                <span className="stat-value">{formatCurrency(activeRun.total_gross)}</span>
               </div>
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200">
-                <span className="text-[10px] uppercase font-bold text-rose-600 block">Total Withheld</span>
-                <span className="text-base font-bold text-rose-700 font-mono mt-0.5 block">−{formatCurrency(activeRun.total_withheld)}</span>
+              <div className="stat-tile">
+                <span className="stat-label">Total Withheld</span>
+                <span className="stat-value text-rose-700">−{formatCurrency(activeRun.total_withheld)}</span>
               </div>
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
-                <span className="text-[10px] uppercase font-bold text-emerald-600 block">Total Net Disbursement</span>
-                <span className="text-lg font-black text-emerald-800 font-mono mt-0.5 block">{formatCurrency(activeRun.total_net)}</span>
+              <div className="stat-tile border-emerald-200 bg-emerald-50/60">
+                <span className="stat-label text-emerald-700">Total Net Disbursement</span>
+                <span className="stat-value text-emerald-800">{formatCurrency(activeRun.total_net)}</span>
               </div>
-              <div className="p-3 rounded-xl bg-blue-50 border border-blue-200">
-                <span className="text-[10px] uppercase font-bold text-blue-600 block">Total Employer Cost</span>
-                <span className="text-base font-bold text-blue-800 font-mono mt-0.5 block">{formatCurrency(activeRun.total_employer_cost)}</span>
+              <div className="stat-tile">
+                <span className="stat-label">Total Employer Cost</span>
+                <span className="stat-value">{formatCurrency(activeRun.total_employer_cost)}</span>
               </div>
             </div>
           </div>
 
           {/* Employee Register Table with Test Fixture Sam Rivera E00412 */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <div className="card overflow-hidden">
+            <div className="card-header">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">Employee Pay Register</h3>
-                <p className="text-[11px] text-slate-500">
+                <h3 className="card-title">Employee Pay Register</h3>
+                <p className="card-subtitle">
                   Select any row to view the explainable mathematical formula trace or official payslip
                 </p>
               </div>
-              <span className="text-xs font-mono text-slate-500 font-bold">
+              <span className="card-meta">
                 {results.length} Eligible Employees
               </span>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200 text-[10px]">
+              <table className="data-table">
+                <thead>
                   <tr>
                     <th className="px-5 py-3">Code</th>
                     <th className="px-5 py-3">Employee Name</th>
@@ -341,65 +352,64 @@ export default function PayrollWorkbenchPage() {
                     <th className="px-5 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700">
+                <tbody>
                   {results.map((res) => (
                     <tr
                       key={res.id}
-                      className={`hover:bg-slate-50/80 transition cursor-pointer ${
-                        res.worker_code === "E00412" ? "bg-brand-50/30" : ""
+                      className={`cursor-pointer ${
+                        res.worker_code === "E00412" ? "bg-brand-50/40" : ""
                       }`}
                       onClick={() => setSelectedResult(res)}
                     >
-                      <td className="px-5 py-4 font-mono font-bold text-slate-900">
+                      <td className="px-5 py-4 font-mono font-semibold text-slate-900">
                         {res.worker_code}
                         {res.worker_code === "E00412" && (
-                          <span className="ml-1.5 px-1.5 py-0.5 rounded text-[9px] bg-brand-500 text-white font-sans font-bold">
+                          <span className="badge badge-info ml-1.5 font-sans">
                             Fixture
                           </span>
                         )}
                       </td>
                       <td className="px-5 py-4">
                         <div>
-                          <span className="font-bold text-slate-900">{res.employee_name}</span>
-                          <div className="text-[11px] text-slate-400">{res.job_title} • {res.department}</div>
+                          <span className="font-semibold text-slate-900">{res.employee_name}</span>
+                          <div className="text-xs text-slate-500">{res.job_title} • {res.department}</div>
                         </div>
                       </td>
                       <td className="px-5 py-4">
-                        <div className="text-[11px]">
+                        <div className="text-xs">
                           <span>{res.payable_workdays}/{res.scheduled_workdays} days</span>
                           {res.unpaid_days > 0 && <span className="text-rose-600 font-semibold ml-1">({res.unpaid_days} unpaid)</span>}
                           {res.overtime_hours > 0 && <span className="text-emerald-700 font-semibold block">+{res.overtime_hours} hrs OT</span>}
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-right font-mono font-bold text-slate-900">
+                      <td className="px-5 py-4 text-right tabular-nums font-semibold text-slate-900">
                         {formatCurrency(res.gross_earnings)}
                       </td>
-                      <td className="px-5 py-4 text-right font-mono font-bold text-rose-600">
+                      <td className="px-5 py-4 text-right tabular-nums font-semibold text-rose-600">
                         −{formatCurrency(res.total_deductions)}
-                        <div className="text-[10px] text-slate-400 font-normal">
+                        <div className="text-[11px] font-normal text-slate-400">
                           Tax: {res.withheld_tax} | Loan: {res.loan_deductions}
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-right font-mono font-black text-emerald-800 text-sm">
+                      <td className="px-5 py-4 text-right tabular-nums font-semibold text-emerald-700 text-sm">
                         {formatCurrency(res.net_payable)}
                       </td>
                       <td className="px-5 py-4 text-center">
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          res.status === "Clean" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
-                        }`}>
-                          {res.status === "Clean" ? "✓ Clean" : "⚠ Warning"}
+                        <span className={`badge ${res.status === "Clean" ? "badge-success" : "badge-warning"}`}>
+                          {res.status === "Clean" ? <CheckCircle2 /> : <AlertTriangle />}
+                          {res.status === "Clean" ? "Clean" : "Warning"}
                         </span>
                       </td>
-                      <td className="px-5 py-4 text-right space-x-2" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-5 py-4 text-right whitespace-nowrap space-x-1.5" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => setSelectedResult(res)}
-                          className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition"
+                          className="btn btn-secondary btn-xs"
                         >
                           Trace
                         </button>
                         <button
                           onClick={() => setPayslipResult(res)}
-                          className="px-2.5 py-1 rounded bg-brand-50 hover:bg-brand-100 text-brand-700 font-semibold text-xs border border-brand-200 transition"
+                          className="btn btn-soft btn-xs"
                         >
                           Payslip
                         </button>
@@ -429,51 +439,51 @@ export default function PayrollWorkbenchPage() {
 
       {/* Create Pay Run Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
-            <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-              <h2 className="text-sm font-bold flex items-center gap-2">
-                <Calculator className="w-4 h-4 text-brand-400" /> Create New Payroll Run
+        <div className="modal-backdrop">
+          <div className="modal-panel max-w-md">
+            <div className="modal-header">
+              <h2 className="modal-title">
+                <Calculator className="w-4 h-4 text-brand-600" /> Create New Payroll Run
               </h2>
-              <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-white">✕</button>
+              <button onClick={() => setShowCreateModal(false)} className="modal-close" aria-label="Close"><X className="w-4 h-4" /></button>
             </div>
-            <form onSubmit={handleCreateRun} className="p-6 space-y-4 text-xs">
+            <form onSubmit={handleCreateRun} className="modal-body">
               <div>
-                <label className="block text-slate-700 font-bold mb-1">Pay Period Description</label>
+                <label className="label">Pay Period Description</label>
                 <input
                   type="text"
                   required
                   value={newRunPeriod}
                   onChange={(e) => setNewRunPeriod(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 font-semibold text-slate-900"
+                  className="input font-semibold text-slate-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-bold mb-1">Legal Entity & Jurisdiction</label>
-                <div className="p-2.5 rounded-lg bg-slate-100 text-slate-700 font-semibold">
+                <label className="label">Legal Entity & Jurisdiction</label>
+                <div className="field-static">
                   Star Solutions Pakistan (Pvt) Ltd • Sindh, Pakistan
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 font-bold mb-1">Pay Group & Currency</label>
-                <div className="p-2.5 rounded-lg bg-slate-100 text-slate-700 font-semibold">
+                <label className="label">Pay Group & Currency</label>
+                <div className="field-static">
                   Monthly Regular Staff • PKR
                 </div>
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+              <div className="modal-footer">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold"
+                  className="btn btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-bold"
+                  className="btn btn-primary"
                 >
                   Create Run in Draft
                 </button>

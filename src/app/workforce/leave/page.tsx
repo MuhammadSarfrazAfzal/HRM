@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CalendarCheck, Plus, CheckCircle2, XCircle, Clock, ShieldCheck, AlertCircle } from "lucide-react";
+import { CalendarCheck, Plus, CheckCircle2, XCircle, Clock, ShieldCheck, AlertCircle, X } from "lucide-react";
 import { getDB } from "@/lib/storage/db";
 import { LeaveBalanceLedger, LeaveRequest, LeavePolicy } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
@@ -56,17 +56,17 @@ export default function LeaveManagementPage() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="page">
+      <div className="page-header">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Leave Balance Ledger & Requests</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="page-title">Leave Balance Ledger & Requests</h1>
+          <p className="page-subtitle">
             Double-entry leave ledger • Accruals, pre-submission reservation holds, and unpaid leave feed to payroll cutoff
           </p>
         </div>
         <button
           onClick={() => setShowApplyModal(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-sm transition"
+          className="btn btn-primary"
         >
           <Plus className="w-4 h-4" />
           <span>Apply for Leave</span>
@@ -75,36 +75,36 @@ export default function LeaveManagementPage() {
 
       {/* Leave Balance Ledgers Grid */}
       <div>
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+        <h2 className="section-title mb-3">
           Employee Balance Ledgers (Grants, Usage & Holds)
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {ledgers.map((l) => {
             const emp = employees.find((e) => e.id === l.employment_id);
             return (
-              <div key={l.id} className="p-4 rounded-xl bg-white border border-slate-200 shadow-sm space-y-2 text-xs">
+              <div key={l.id} className="card p-4 space-y-2 text-[13px]">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-900">{emp?.fullName || l.employment_id}</span>
-                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-brand-50 text-brand-700">
+                  <span className="font-semibold text-slate-900">{emp?.fullName || l.employment_id}</span>
+                  <span className="font-mono text-[11px] font-semibold px-2 py-0.5 rounded bg-brand-50 text-brand-700">
                     {l.policy_code}
                   </span>
                 </div>
                 <div className="grid grid-cols-4 gap-1.5 text-center pt-1 border-t border-slate-100">
                   <div className="p-1 rounded bg-slate-50">
-                    <span className="text-[9px] text-slate-400 uppercase block font-bold">Total</span>
-                    <span className="font-bold text-slate-800">{l.total_entitlement}</span>
+                    <span className="stat-label">Total</span>
+                    <span className="font-semibold text-slate-800">{l.total_entitlement}</span>
                   </div>
                   <div className="p-1 rounded bg-slate-50">
-                    <span className="text-[9px] text-slate-400 uppercase block font-bold">Used</span>
-                    <span className="font-bold text-slate-800">{l.used}</span>
+                    <span className="stat-label">Used</span>
+                    <span className="font-semibold text-slate-800">{l.used}</span>
                   </div>
                   <div className="p-1 rounded bg-amber-50">
-                    <span className="text-[9px] text-amber-600 uppercase block font-bold">On Hold</span>
-                    <span className="font-bold text-amber-800">{l.on_hold}</span>
+                    <span className="stat-label text-amber-700">On Hold</span>
+                    <span className="font-semibold text-amber-800">{l.on_hold}</span>
                   </div>
                   <div className="p-1 rounded bg-emerald-50">
-                    <span className="text-[9px] text-emerald-600 uppercase block font-bold">Available</span>
-                    <span className="font-bold text-emerald-700">{l.available}</span>
+                    <span className="stat-label text-emerald-700">Available</span>
+                    <span className="font-semibold text-emerald-700">{l.available}</span>
                   </div>
                 </div>
               </div>
@@ -114,14 +114,14 @@ export default function LeaveManagementPage() {
       </div>
 
       {/* Leave Requests Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900">Leave Requests & Approval Queue</h2>
-          <span className="text-xs text-slate-500 font-mono">Requests: {requests.length}</span>
+      <div className="card overflow-hidden">
+        <div className="card-header">
+          <h2 className="card-title">Leave Requests & Approval Queue</h2>
+          <span className="card-meta">Requests: {requests.length}</span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200 text-[10px]">
+          <table className="data-table">
+            <thead>
               <tr>
                 <th className="px-5 py-3">Employee</th>
                 <th className="px-5 py-3">Type</th>
@@ -132,39 +132,39 @@ export default function LeaveManagementPage() {
                 <th className="px-5 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody>
               {requests.map((req) => {
                 const emp = employees.find((e) => e.id === req.employment_id);
                 return (
-                  <tr key={req.id} className="hover:bg-slate-50/70 transition">
-                    <td className="px-5 py-3.5 font-bold text-slate-900">{emp?.fullName || req.employment_id}</td>
+                  <tr key={req.id}>
+                    <td className="px-5 py-3.5 font-semibold text-slate-900">{emp?.fullName || req.employment_id}</td>
                     <td className="px-5 py-3.5">
-                      <span className="px-2 py-0.5 rounded font-mono font-bold bg-slate-100 text-slate-700 text-[10px]">
+                      <span className="px-2 py-0.5 rounded font-mono font-semibold bg-slate-100 text-slate-700 text-[11px]">
                         {req.policy_code}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 font-medium">{formatDate(req.start_date)}</td>
-                    <td className="px-5 py-3.5 font-bold">{req.units} day(s)</td>
+                    <td className="px-5 py-3.5 font-semibold">{req.units} day(s)</td>
                     <td className="px-5 py-3.5 text-slate-600">{req.reason}</td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase ${
                         req.status === "Approved" ? "bg-emerald-100 text-emerald-800" : (req.status === "Submitted" ? "bg-amber-100 text-amber-800" : "bg-rose-100 text-rose-800")
                       }`}>
                         {req.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-right space-x-2">
+                    <td className="px-5 py-3.5 text-right space-x-2 whitespace-nowrap">
                       {req.status === "Submitted" && (
                         <>
                           <button
                             onClick={() => handleDecision(req.id, "Approved")}
-                            className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition"
+                            className="btn btn-success btn-xs"
                           >
                             Approve
                           </button>
                           <button
                             onClick={() => handleDecision(req.id, "Rejected")}
-                            className="px-2.5 py-1 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-[11px] transition"
+                            className="btn btn-secondary btn-xs"
                           >
                             Reject
                           </button>
@@ -181,22 +181,22 @@ export default function LeaveManagementPage() {
 
       {/* Apply Leave Modal */}
       {showApplyModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden">
-            <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-              <h2 className="text-sm font-bold flex items-center gap-2">
-                <CalendarCheck className="w-4 h-4 text-brand-400" /> Apply for Leave
+        <div className="modal-backdrop">
+          <div className="modal-panel max-w-md">
+            <div className="modal-header">
+              <h2 className="modal-title">
+                <CalendarCheck className="w-4 h-4 text-brand-600" /> Apply for Leave
               </h2>
-              <button onClick={() => setShowApplyModal(false)} className="text-slate-400 hover:text-white">✕</button>
+              <button onClick={() => setShowApplyModal(false)} className="modal-close" aria-label="Close"><X className="w-4 h-4" /></button>
             </div>
 
-            <form onSubmit={handleApplyLeave} className="p-6 space-y-4 text-xs">
+            <form onSubmit={handleApplyLeave} className="modal-body">
               <div>
-                <label className="block text-slate-700 font-bold mb-1">Employee</label>
+                <label className="label">Employee</label>
                 <select
                   value={formEmpId}
                   onChange={(e) => setFormEmpId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white"
+                  className="select"
                 >
                   {employees.map((e) => (
                     <option key={e.id} value={e.id}>{e.worker_code} - {e.fullName}</option>
@@ -204,13 +204,13 @@ export default function LeaveManagementPage() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Leave Policy</label>
+                  <label className="label">Leave Policy</label>
                   <select
                     value={formPolicyCode}
                     onChange={(e) => setFormPolicyCode(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white font-semibold"
+                    className="select font-semibold"
                   >
                     {policies.map((p) => (
                       <option key={p.id} value={p.code}>{p.name} ({p.code})</option>
@@ -218,63 +218,63 @@ export default function LeaveManagementPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Duration (Units)</label>
+                  <label className="label">Duration (Units)</label>
                   <input
                     type="number"
                     step="0.5"
                     value={formUnits}
                     onChange={(e) => setFormUnits(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 font-bold"
+                    className="input font-semibold"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Start Date</label>
+                  <label className="label">Start Date</label>
                   <input
                     type="date"
                     value={formStartDate}
                     onChange={(e) => setFormStartDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300"
+                    className="input"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">End Date</label>
+                  <label className="label">End Date</label>
                   <input
                     type="date"
                     value={formEndDate}
                     onChange={(e) => setFormEndDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300"
+                    className="input"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 font-bold mb-1">Reason</label>
+                <label className="label">Reason</label>
                 <textarea
                   value={formReason}
                   onChange={(e) => setFormReason(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300"
+                  className="textarea"
                   placeholder="State reason for absence..."
                 />
               </div>
 
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-900">
+              <div className="stat-tile border-amber-200 bg-amber-50/60 p-3 text-[11px] text-amber-900">
                 Notice: Submitting will reserve {formUnits} unit(s) on hold immediately.
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+              <div className="modal-footer">
                 <button
                   type="button"
                   onClick={() => setShowApplyModal(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold"
+                  className="btn btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-bold"
+                  className="btn btn-primary"
                 >
                   Submit Request
                 </button>

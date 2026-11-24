@@ -13,8 +13,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Clock,
-  Filter,
-} from "lucide-react";
+  Filter, X } from "lucide-react";
 import { getDB } from "@/lib/storage/db";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -113,26 +112,26 @@ export default function PeopleDirectoryPage() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="page">
       {/* Title & Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="page-header">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">People Directory</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="page-title">People Directory</h1>
+          <p className="page-subtitle">
             North Entity • Central employee records, effective-dated assignments, and compensation
           </p>
         </div>
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => alert("Bulk Excel roster preview and row-level error validation active.")}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition"
+            className="btn btn-secondary"
           >
             <Upload className="w-3.5 h-3.5 text-slate-500" />
             <span>Import Roster</span>
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold shadow-sm shadow-brand-500/20 transition"
+            className="btn btn-primary"
           >
             <Plus className="w-4 h-4" />
             <span>Add Employee</span>
@@ -141,7 +140,7 @@ export default function PeopleDirectoryPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
+      <div className="card p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -149,7 +148,7 @@ export default function PeopleDirectoryPage() {
             placeholder="Search by name or employee code (e.g. E00412)..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 bg-slate-50"
+            className="input pl-9"
           />
         </div>
 
@@ -161,7 +160,7 @@ export default function PeopleDirectoryPage() {
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}
-            className="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 text-slate-700"
+            className="select input-sm w-full sm:w-auto"
           >
             <option value="ALL">All Departments</option>
             {departments.map((d) => (
@@ -174,7 +173,7 @@ export default function PeopleDirectoryPage() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-slate-50 text-slate-700"
+            className="select input-sm w-full sm:w-auto"
           >
             <option value="ALL">All Statuses</option>
             <option value="Active">Active</option>
@@ -186,10 +185,10 @@ export default function PeopleDirectoryPage() {
       </div>
 
       {/* Employees Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200 text-[10px]">
+          <table className="data-table">
+            <thead>
               <tr>
                 <th className="px-5 py-3.5">Code</th>
                 <th className="px-5 py-3.5">Employee Name</th>
@@ -200,20 +199,20 @@ export default function PeopleDirectoryPage() {
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody>
               {filteredEmployees.map((emp) => (
-                <tr key={emp.id} className="hover:bg-slate-50/70 transition">
-                  <td className="px-5 py-3.5 font-mono font-bold text-slate-900">{emp.worker_code}</td>
+                <tr key={emp.id}>
+                  <td className="px-5 py-3.5 font-mono font-semibold text-slate-900">{emp.worker_code}</td>
                   <td className="px-5 py-3.5">
                     <div>
-                      <span className="font-bold text-slate-900">{emp.fullName}</span>
+                      <span className="font-semibold text-slate-900">{emp.fullName}</span>
                       <div className="text-[11px] text-slate-400">{emp.person.email} • {emp.person.national_id}</div>
                     </div>
                   </td>
                   <td className="px-5 py-3.5 font-medium">{emp.orgUnit?.name || "Operations"}</td>
                   <td className="px-5 py-3.5">
                     <span className="font-semibold text-slate-800">{emp.assignment.job_title}</span>
-                    <span className="ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-100 text-slate-600">
+                    <span className="ml-1.5 px-1.5 py-0.5 rounded text-[11px] font-mono bg-slate-100 text-slate-600">
                       {emp.assignment.grade_id}
                     </span>
                   </td>
@@ -224,15 +223,15 @@ export default function PeopleDirectoryPage() {
                     </div>
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span className="badge badge-success">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                       {emp.status}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right space-x-2">
+                  <td className="px-5 py-3.5 text-right space-x-2 whitespace-nowrap">
                     <button
                       onClick={() => alert(`Employee File for ${emp.fullName} (${emp.worker_code})\nEffective Date: ${emp.assignment.valid_from}\nSite: Karachi Tech Park`)}
-                      className="px-2.5 py-1 rounded-lg border border-slate-200 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition"
+                      className="btn btn-secondary btn-xs"
                     >
                       View Drawer
                     </button>
@@ -246,83 +245,83 @@ export default function PeopleDirectoryPage() {
 
       {/* Add Employee Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full border border-slate-200 overflow-hidden">
-            <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-              <h2 className="text-sm font-bold flex items-center gap-2">
-                <Users className="w-4 h-4 text-brand-400" /> Add New Employee Record
+        <div className="modal-backdrop">
+          <div className="modal-panel max-w-xl">
+            <div className="modal-header">
+              <h2 className="modal-title">
+                <Users className="w-4 h-4 text-brand-600" /> Add New Employee Record
               </h2>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white">✕</button>
+              <button onClick={() => setShowAddModal(false)} className="modal-close" aria-label="Close"><X className="w-4 h-4" /></button>
             </div>
 
-            <form onSubmit={handleCreateEmployee} className="p-6 space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleCreateEmployee} className="modal-body">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">First Name *</label>
+                  <label className="label">First Name *</label>
                   <input
                     type="text"
                     required
                     value={formFirstName}
                     onChange={(e) => setFormFirstName(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500"
+                    className="input"
                     placeholder="e.g. Asad"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Last Name *</label>
+                  <label className="label">Last Name *</label>
                   <input
                     type="text"
                     required
                     value={formLastName}
                     onChange={(e) => setFormLastName(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-500"
+                    className="input"
                     placeholder="e.g. Mehmood"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Worker Code *</label>
+                  <label className="label">Worker Code *</label>
                   <input
                     type="text"
                     required
                     value={formWorkerCode}
                     onChange={(e) => setFormWorkerCode(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 font-mono font-bold"
+                    className="input font-mono font-semibold"
                     placeholder="e.g. E00455"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">CNIC (National ID) *</label>
+                  <label className="label">CNIC (National ID) *</label>
                   <input
                     type="text"
                     required
                     value={formCNIC}
                     onChange={(e) => setFormCNIC(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 font-mono"
+                    className="input font-mono"
                     placeholder="42101-1234567-1"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Job Title</label>
+                  <label className="label">Job Title</label>
                   <input
                     type="text"
                     value={formTitle}
                     onChange={(e) => setFormTitle(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300"
+                    className="input"
                     placeholder="Operations Associate"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Department</label>
+                  <label className="label">Department</label>
                   <select
                     value={formDeptId}
                     onChange={(e) => setFormDeptId(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white"
+                    className="select"
                   >
                     {departments.map((d) => (
                       <option key={d.id} value={d.id}>{d.name}</option>
@@ -331,34 +330,34 @@ export default function PeopleDirectoryPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Contractual Monthly Salary (PKR)</label>
+                  <label className="label">Contractual Monthly Salary (PKR)</label>
                   <input
                     type="number"
                     value={formSalary}
                     onChange={(e) => setFormSalary(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 font-bold text-slate-900"
+                    className="input font-semibold text-slate-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-bold mb-1">Bank Name</label>
+                  <label className="label">Bank Name</label>
                   <input
                     type="text"
                     value={formBankName}
                     onChange={(e) => setFormBankName(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300"
+                    className="input"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 font-bold mb-1">Bank IBAN / Account Number</label>
+                <label className="label">Bank IBAN / Account Number</label>
                 <input
                   type="text"
                   value={formAccountNo}
                   onChange={(e) => setFormAccountNo(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 font-mono"
+                  className="input font-mono"
                   placeholder="PK36MEZN0001000123456789"
                 />
               </div>
@@ -370,17 +369,17 @@ export default function PeopleDirectoryPage() {
                 </span>
               </div>
 
-              <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-100">
+              <div className="modal-footer">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold"
+                  className="btn btn-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-bold"
+                  className="btn btn-primary"
                 >
                   Save & Activate
                 </button>

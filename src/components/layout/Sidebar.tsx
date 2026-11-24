@@ -25,6 +25,7 @@ import {
   Cpu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoMark } from "@/components/ui/Logo";
 
 interface NavGroup {
   title: string;
@@ -89,64 +90,80 @@ const navGroups: NavGroup[] = [
   },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  /** Called after a nav link is chosen; the mobile drawer uses it to close itself. */
+  onNavigate?: () => void;
+  className?: string;
+}
+
+export function Sidebar({ onNavigate, className }: SidebarProps) {
   const pathname = usePathname();
+  // Highlight only the most specific match so /people/onboarding doesn't also light up /people.
+  const activeHref = navGroups
+    .flatMap((group) => group.items.map((item) => item.href))
+    .filter((href) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)))
+    .sort((a, b) => b.length - a.length)[0];
 
   return (
-    <aside className="w-64 border-r border-slate-200 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 h-screen sticky top-0 no-print select-none">
+    <aside
+      className={cn(
+        "flex h-full w-64 flex-col border-r border-slate-200 bg-white no-print select-none",
+        className
+      )}
+    >
       {/* Brand Header */}
-      <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800 bg-slate-950/40">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-brand-500/20 text-white font-black text-lg">
-          H
-        </div>
-        <div>
-          <h1 className="text-sm font-bold text-white tracking-tight">FlowHCM Enterprise</h1>
-          <p className="text-[11px] font-medium text-slate-400">Payroll & HR Benchmark</p>
+      <div className="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 px-5">
+        <LogoMark className="h-8 w-8" />
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold text-slate-900">FlowHCM Enterprise</div>
+          <p className="truncate text-xs text-slate-500">Payroll & HR Benchmark</p>
         </div>
       </div>
 
       {/* Nav Menu */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+      <nav aria-label="Primary" className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
         {navGroups.map((group) => (
           <div key={group.title}>
-            <div className="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-1.5">
+            <div className="mb-1.5 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
               {group.title}
             </div>
             <div className="space-y-0.5">
               {group.items.map((item) => {
-                const isActive =
-                  item.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(item.href);
+                const isActive = item.href === activeHref;
                 const Icon = item.icon;
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={onNavigate}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition group",
+                      "group relative flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors",
                       isActive
-                        ? "bg-brand-600 text-white shadow-sm shadow-brand-600/30"
-                        : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/60"
+                        ? "bg-brand-50 text-brand-700"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                     )}
                   >
-                    <div className="flex items-center gap-2.5">
+                    {isActive && (
+                      <span aria-hidden="true" className="absolute inset-y-1.5 -left-3 w-1 rounded-r-full bg-brand-600" />
+                    )}
+                    <div className="flex min-w-0 items-center gap-2.5">
                       <Icon
                         className={cn(
-                          "w-4 h-4 transition",
-                          isActive ? "text-white" : "text-slate-400 group-hover:text-slate-200"
+                          "h-4 w-4 shrink-0 transition-colors",
+                          isActive ? "text-brand-600" : "text-slate-400 group-hover:text-slate-600"
                         )}
                       />
-                      <span>{item.label}</span>
+                      <span className="truncate">{item.label}</span>
                     </div>
                     {item.badge && (
                       <span
                         className={cn(
-                          "text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase",
+                          "rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
                           isActive
-                            ? "bg-white/20 text-white"
-                            : "bg-slate-800 text-slate-300"
+                            ? "bg-brand-100 text-brand-700"
+                            : "bg-slate-100 text-slate-500"
                         )}
                       >
                         {item.badge}
@@ -158,17 +175,19 @@ export function Sidebar() {
             </div>
           </div>
         ))}
-      </div>
+      </nav>
 
       {/* Footer Benchmark Version */}
-      <div className="p-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between bg-slate-950/20">
-        <div>
-          <span className="font-semibold text-slate-300">Spec v1.0</span> (Nov 2026)
+      <div className="shrink-0 border-t border-slate-200 p-3">
+        <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2.5 text-xs text-slate-500">
+          <div>
+            <span className="font-semibold text-slate-700">Spec v1.0</span> (Nov 2026)
+          </div>
+          <span className="flex items-center gap-1.5 font-medium text-emerald-700">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            Ready
+          </span>
         </div>
-        <span className="text-emerald-400 flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          Ready
-        </span>
       </div>
     </aside>
   );

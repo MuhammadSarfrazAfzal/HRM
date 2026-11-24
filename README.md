@@ -81,3 +81,5 @@ npm start
 ```
 The application will be accessible at `http://localhost:3000`.
 
+The Inter font is self-hosted via `next/font/google`, so it is downloaded from Google Fonts when the app is compiled: `npm run build` needs network access (and fails without it), while `npm run dev` falls back to the system font stack. Browsers never contact Google at runtime.
+
